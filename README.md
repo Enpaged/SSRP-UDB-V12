@@ -16,6 +16,7 @@ The programm can;
 
 >Delete full user dir or single entry
 
+>Dynamic menu, Console clears for each chosen menu to be a clean desgin
 
 
 It is console based and only takes upa  few MB of space, so it can eve be stored on old SD cards
@@ -26,11 +27,16 @@ IMPORTANT;
 
 At the first start of the programm (.exe), it will open for a short ammount of time and close again. This is, because it automatically creates all important files needed to run the database. After the first start it should start normal
 
-
-
 The programm requiers secure file access in windows
 
-
-
 MADE FOR WINDOWS ONLY
+
+HOW TO RUN;
+Simple: Place the .exe in the folder youw ant the database to be in
+Enable secure file access in windows security settings for the .exe
+On first start it will open for a split second and create all important files automatically
+After that run it as normal.
+>IMPORTANT
+>To run it smoothly put it on full screen or half screen mode, otherwise the console wont fit and the text will get messed up
+
 

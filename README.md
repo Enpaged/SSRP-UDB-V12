@@ -1,10 +1,10 @@
 # SSRP UDB V12
 
 An unofficial database for the roblox game SCP: Site Rolepaly
+CLI based
 
 
-
-made to keep track of players that broke the rules
+Made to keep track of players that broke the rules
 
 Mainly made for Moderators
 
@@ -17,6 +17,8 @@ The programm can;
 >Delete full user dir or single entry
 
 >Dynamic menu, Console clears for each chosen menu to be a clean desgin
+>Fully CLI based for to allow simple design changes and low memory usage
+>VERY low storage usage; 25KB for 20 users, 1 entry per user. 1MB should be able  to hold AT LEAST 500 users (1 entry per user)
 
 
 It is console based and only takes upa  few MB of space, so it can eve be stored on old SD cards

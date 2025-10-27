@@ -12,6 +12,7 @@ void header();
 void list_db(int exit_);
 void add_entry(int exit_);
 void delete_entry(int exit_);
+void search_by_user(int exit_);
 void CWD();
 
 //manual modifier
@@ -20,14 +21,14 @@ void CWD();
 
 #define MAIN_DATA_DIR ".db"
 #define HEADER_TEXT "SSRP Unofficial Database"
-#define HEADER_VERSION "Version 0.1"
+#define HEADER_VERSION "Version 14.5"
 #define HEADER_SIZE 180
 
 int main()					//Main programm
 {
 	int menu_ = 0;
 
-	if (_chdir(".db") != 0) 
+	if (_chdir(".db") != 0)
 	{									//Check if .db directory exists
 		system("cls");
 		perror("Failed to change .db directory [S1]");
@@ -89,7 +90,7 @@ int main()					//Main programm
 		printf("Successfully created main directory!\n");
 
 		exit(1);						//Exit after creating .db directory
-									
+
 	}
 
 	do {
@@ -98,6 +99,7 @@ int main()					//Main programm
 		printf("1: Database\n");
 		printf("2: Add Entry\n");
 		printf("3: Delete Entry\n");
+		printf("4: Search Entry by User\n");
 		printf("ESC: Exit\n");
 		menu_ = _getch();
 
@@ -113,6 +115,10 @@ int main()					//Main programm
 		case '3':
 			system("cls");
 			delete_entry(menu_);
+			break;
+		case '4':
+			system("cls");
+			search_by_user(menu_);
 			break;
 		case 27:
 			system("cls");
@@ -164,44 +170,22 @@ void list_db(int exit_)					//Function to list the database entries
 	char buffer[128];								//Buffer for reading data from .users.txt
 	int counter = 0;					//Counter for entries
 
-
-
-
-	//FILE* counter = fopen(".count.txt", "r");		//Open .count.txt to read total entries
-	//if (counter == NULL) {							//Check if file was able to open
-	//	system("cls");								//If not, print error and exit
-	//	CWD();
-	//	perror("\nFailed to open .count.txt [LD1]");
-	//	Sleep(3000);
-	//	exit(1);
-	//}
-	//if (fscanf(counter, "%d", &allentries) != 1)			//Read total entries
-	//{														//Check if reading was successful
-	//	system("cls");										//If not, print error and exit
-	//	CWD();
-	//	perror("\nFailed to read .count.txt [LD2]");
-	//	Sleep(3000);
-	//	exit(1);
-	//}
-	//
-	//fclose(counter);								//Close the file after reading was successful
-	
 	system("cls");
 	header();								//Display header
 	gotoxy(0, 4);
 	printf("Main/Database");
 	gotoxy(0, 6);
-	printf("%-8s %-32s %-16s %-32s %-16s %-16s %-16s %-64s\n", 
-			"ID", "Username", "Role", "Rule", "Date", "Time", "Status", "Evidence [YT, GD]");	//Display first tabel line
+	printf("%-8s %-32s %-16s %-32s %-16s %-16s %-16s %-64s\n",
+		"ID", "Username", "Role", "Rule", "Date", "Time", "Status", "Evidence [YT, GD]");	//Display first tabel line
 	for (int i = 0; i < HEADER_SIZE; i++)														//Display header line
-		{
+	{
 		printf("-");
 	}
 	printf("\n");
 
 	FILE* database = fopen(".users.txt", "r");			//Open .db.txt to read entries
-	if (database == NULL) {	
-		system("cls");	
+	if (database == NULL) {
+		system("cls");
 		CWD();									//If not, print error and exit
 		perror("\nFailed to open .users.txt [LD2.2]");
 		Sleep(3000);
@@ -213,11 +197,11 @@ void list_db(int exit_)					//Function to list the database entries
 	while (fgets(data, sizeof(data), database) != NULL)
 	{
 		data[strcspn(data, "\n")] = '\0';
-													
 
-		if (_chdir(data) != 0) 
-		{											
-			system("cls");														
+
+		if (_chdir(data) != 0)
+		{
+			system("cls");
 			CWD();
 			perror("Failed to change directory to user [LD3]");
 			Sleep(3000);
@@ -261,8 +245,8 @@ void list_db(int exit_)					//Function to list the database entries
 				exit(1);
 			}
 			fclose(entry);														//Close the file after reading
-			printf("%-8d %-32s %-16s %-32s %-16s %-16s %-16s %-64s\n", 
-					ID, username, role, rule, date, time, status, yt);			//Display read data in table format
+			printf("%-8d %-32s %-16s %-32s %-16s %-16s %-16s %-64s\n",
+				ID, username, role, rule, date, time, status, yt);			//Display read data in table format
 
 			counter++;														//Increment counter for entries
 		}
@@ -275,7 +259,7 @@ void list_db(int exit_)					//Function to list the database entries
 		}
 
 	}
-	
+
 	printf("\nEntries: %d\n", counter);
 	printf("\n\nDatabase reading successfully!\n");
 	printf("\nPress ESC to continue...\n");
@@ -308,7 +292,7 @@ void add_entry(int exit_)				//Function to add an entry to the database
 	gotoxy(0, 4);
 	printf("please enter the following information\n");
 
-	if (_chdir("..") != 0 )											//Change to parent directory
+	if (_chdir("..") != 0)											//Change to parent directory
 	{																//If failed, print error and exit
 		system("cls");
 		CWD();
@@ -321,7 +305,7 @@ void add_entry(int exit_)				//Function to add an entry to the database
 		system("cls");												//If failed, print error and exit
 		CWD();										//Get current working directory
 		printf("CWD: %s\n", debug);										//Debug print to see current working directory
-		perror("Failed to change directory to .db [AE1]");	
+		perror("Failed to change directory to .db [AE1]");
 		Sleep(3000);
 		exit(1);
 	}
@@ -381,13 +365,13 @@ void add_entry(int exit_)				//Function to add an entry to the database
 		printf("User dir: %s does not exist\n", username);
 		printf("Do you want to create it? (y/n)\n");
 
-		
+
 		char choice = _getch();
-		
+
 
 		switch (choice)
 		{
-			
+
 		case 'y':
 		{
 			if (_mkdir(username) != 0) {								//Create user directory
@@ -444,7 +428,7 @@ void add_entry(int exit_)				//Function to add an entry to the database
 			break;
 		}
 	}
-	
+
 	for (int i = 0; i < MAX_USER_ENTRIES; i++)
 	{
 		snprintf(searchfile, sizeof(searchfile), "%s_%d.txt", username, i);			//Create File name with username and ID
@@ -475,9 +459,9 @@ void add_entry(int exit_)				//Function to add an entry to the database
 			continue;										//File exists, try next ID
 		}
 	}
-	
+
 	if (_chdir("..") != 0) {										//Change back to parent directory
-		system("cls");	
+		system("cls");
 		CWD();
 		perror("\nFailed to change directory to parent [AE10]");
 		Sleep(3000);
@@ -549,7 +533,7 @@ void delete_entry(int exit_)								//TODO: Function to delete an entry or user
 			exit(1);
 		}
 		if (_chdir("..") != 0) {										//Change back to parent directory
-			system("cls");	
+			system("cls");
 			CWD();
 			perror("\nFailed to change directory to parent [DE2.1]");
 			Sleep(3000);
@@ -621,38 +605,6 @@ void delete_entry(int exit_)								//TODO: Function to delete an entry or user
 			exit(1);
 		}
 		printf("Change to parent dir successful...\n");							//Display success message
-
-		//FILE* upcount = fopen(".count.txt", "r");						//Open .count.txt to read total entries
-		//if (upcount == NULL) {											//Check if file was able to open
-		//	system("cls");												//If not, print error and exit
-		//	CWD();
-		//	perror("\nFailed to open .count.txt [DE6.1]");
-		//	Sleep(3000);
-		//	exit(1);
-		//}
-		////printf
-		//if (fscanf(upcount, "%d", &entries) != 1)				//Read total entries
-		//{																//Check if reading was successful
-		//	system("cls");												//If not, print error and exit
-		//	CWD();
-		//	perror("\nFailed to read .count.txt [DE7]");
-		//	Sleep(3000);
-		//	exit(1);
-		//}
-		//fclose(upcount);												//Close the file after reading
-
-		//upcount = fopen(".count.txt", "w");								//Open .count.txt to write new total entries
-		//if (upcount == NULL) {											//Check if file was able to open
-		//	system("cls");												//If not, print error and exit
-		//	CWD();
-		//	perror("\nFailed to open .count.txt [DE7.1]");
-		//	Sleep(3000);
-		//	exit(1);
-		//}
-		//fprintf(upcount, "%d\n%d", entries - delcount, olddelcount + delcount);	//Write new total entries
-		//fclose(upcount);												//Close the file after writing
-
-
 
 		printf("\nUser Entries of: %s deleted successfully!\n", username);		//Display success message
 		printf("\nPress ESC to continue...\n");					//Prompt user to press ESC to continue
@@ -745,14 +697,150 @@ void delete_entry(int exit_)								//TODO: Function to delete an entry or user
 
 
 
-	
+
 
 	printf("Press ESC to continue...\n");						//Prompt user to press ESC to continue
 	while (exit_ != 27)
 	{
 		exit_ = _getch();
 	}
+
+}
+
+void search_by_user(int exit_)								//TODO: Function to delete an entry or user
+{
+	char buffer[128];										//Buffer for reading data from .users.txt
+	char username[32];										//Variable to store username to delete
+	char moveuser[64];										//Buffer for moving user directory
+
+	char username_[32];					//Variables to store read data
+	char role[16];
+	char rule[32];
+	char date[16];
+	char time[16];
+	char status[16];
+	char yt[64];
+	int ID = 0;
+	int FILE_ID = 0;									//Variable to store file ID
+
+	int searchsucces = 0;									//Variable to check if deletion was successful
+	char delchoice = 'W';									//Variable to store user choice
+	int delid = 9999;
+	char delfile[64];										//Buffer for file name to delete
+
+	int user_entries = 0;
+
+
+
+	while (searchsucces != 1)
+	{
+		system("cls");
+		header();													//Display header
+		gotoxy(0, 4);
+		printf("Main/Delete Entry\n");
+		gotoxy(0, 6);
+		printf("Enter a username to delete the entry:\n");
+		printf("Username: ");
+		scanf_s("%31s", username, (unsigned)_countof(username));	//User input for username
+		username[strcspn(username, "\n")] = '\0';					//Remove newline character from username
+
+		if (_chdir(username) != 0) {									//Check if user directory exists
+			system("cls");												//If not, print error and exit
+			CWD();
+			perror("\nFailed to change directory to user [DE2]");
+			Sleep(3000);
+			exit(1);
+		}
+		if (_chdir("..") != 0) {										//Change back to parent directory
+			system("cls");
+			CWD();
+			perror("\nFailed to change directory to parent [DE2.1]");
+			Sleep(3000);
+			exit(1);
+		}
+		searchsucces = 1;
+	}
 	
+	system("cls");
+	header();													//Display header
+	gotoxy(0, 4);
+	printf("Main/Search Entries by User\n");
+	gotoxy(0, 6);
+	printf("Listing user entries for: %s\n", username);			//Display user entries
+	printf("\n");
+	printf("%-8s %-8s %-32s %-16s %-32s %-16s %-16s %-16s %-64s\n",
+		"FILE", "ID", "Username", "Role", "Rule", "Date", "Time", "Status", "Evidence[YT, GD]");
+	for (int i = 0; i < HEADER_SIZE; i++)														//Display header line
+	{
+		printf("-");
+	}
+	printf("\n");
+
+	if (_chdir(username) != 0) {									//Change to user directory
+		system("cls");												//If failed, print error and exit
+		CWD();
+		perror("Failed to change directory to user [DE8]");
+		Sleep(3000);
+		exit(1);
+	}
+	for (int i = 0; i < MAX_USER_ENTRIES; i++)								//Loop through all user entries
+	{
+		char searchfile[64];												//Buffer for file name
+		snprintf(searchfile, sizeof(searchfile), "%s_%d.txt", username, i);		//Create file name with username and ID
+		FILE* entry = fopen(searchfile, "r");								//Open user entry file
+		if (entry == NULL) {												//Check if file was able to open
+			continue;														//If not, continue to next entry
+		}
+		fgets(username_, sizeof(username_), entry);							//Read data from file
+		username_[strcspn(username_, "\n")] = '\0';							//Remove newline character from username
+
+		fgets(role, sizeof(role), entry);									//Read role
+		role[strcspn(role, "\n")] = '\0';									//Remove newline character from role
+
+		fgets(rule, sizeof(rule), entry);									//Read rule
+		rule[strcspn(rule, "\n")] = '\0';									//Remove newline character from rule
+
+		fgets(date, sizeof(date), entry);									//Read date
+		date[strcspn(date, "\n")] = '\0';									//Remove newline character from date
+
+		fgets(time, sizeof(time), entry);									//Read time
+		time[strcspn(time, "\n")] = '\0';									//Remove newline character from time
+
+		fgets(status, sizeof(status), entry);								//Read status
+		status[strcspn(status, "\n")] = '\0';								//Remove newline character from status
+
+		fgets(yt, sizeof(yt), entry);										//Read evidence
+		yt[strcspn(yt, "\n")] = '\0';										//Remove newline character from evidence
+
+		if (fscanf(entry, "%d", &ID) != 1) {								//Read ID from file
+			system("cls");
+			perror("Failed to read ID from entry file [DE5]");				//If reading failed, print error and exit
+			Sleep(3000);
+			exit(1);
+		}
+		fclose(entry);														//Close the file after reading
+		printf("%-8d %-8d %-32s %-16s %-32s %-16s %-16s %-16s %-64s\n",
+			i, ID, username_, role, rule, date, time, status, yt);			//Display read data in table format
+
+		user_entries++;
+	}
+	
+	if (_chdir("..") != 0) {												//Change back to parent directory
+		CWD();
+		system("cls");														//If failed, print error and exit
+		perror("Failed to change directory to parent [DE10]");
+		Sleep(3000);
+		exit(1);
+	}
+	
+	printf("\n\nFound Entries: %d", user_entries);
+
+	printf("\n\nPress ESC to exit...\n");						//Prompt user to press ESC to continue
+	while (exit_ != 27)
+	{
+		exit_ = _getch();
+	}
+
 }
 
 
@@ -763,7 +851,7 @@ void gotoxy(int x, int y)
 
 void CWD()
 {
-	char CWD_[256];	
+	char CWD_[256];
 	//Buffer for current working directory
 	if (_getcwd(CWD_, sizeof(CWD_)) != NULL)
 	{
@@ -782,4 +870,3 @@ void CWD()
 
 
 //Line 407: change dir to user (try)
-

@@ -14,6 +14,8 @@ The programm can;
 
 >Add new entries
 
+>Search Entries by Username
+
 >Delete full user dir or single entry
 
 >Dynamic menu, Console clears for each chosen menu to be a clean desgin
